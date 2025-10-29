@@ -22,7 +22,7 @@ services:
   data-generator:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.datagen
     container_name: godlevel-data-gen
     depends_on:
       postgres:
@@ -52,6 +52,38 @@ services:
       - postgres
     profiles:
       - tools
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: godlevel-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: godlevel-db
+      DB_NAME: challenge_db
+      DB_USER: challenge
+      DB_PASS: challenge_2024
+    depends_on:
+      - postgres
+
+  
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: godlevel-backend
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: godlevel-db
+      DB_NAME: challenge_db
+      DB_USER: challenge
+      DB_PASS: challenge_2024
+    depends_on:
+      - postgres
+
 
 volumes:
   postgres_data:
