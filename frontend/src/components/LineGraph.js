@@ -1,29 +1,7 @@
 import React, { useMemo } from "react";
 import { useMetricData } from "../hooks/useMetricData";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
-
-function formatMetricValue(metricName, value) {
-  if (value == null) return "N/A";
-
-  switch (metricName) {
-    case "faturamento":
-    case "ticketMedio":
-      return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(value);
-
-    case "quantidadePedidos":
-    case "itensVendidos":
-      return new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 }).format(value);
-
-    case "tempoDeEntrega":
-      return new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }).format(value);
-
-    default:
-      return value.toFixed ? value.toFixed(1) : value;
-  }
-}
+import { formatMetricValue } from "../utils/formatMetricValueUtil";
 
 export default function LineGraph({
   id,
