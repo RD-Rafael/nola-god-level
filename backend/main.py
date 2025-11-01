@@ -10,7 +10,9 @@ from db_setup import Session as AppSession
 import crud
 from crud import MetricPeriod
 
-app = FastAPI()
+app = FastAPI(
+    title="GodLevel Challenge 2025",
+)
 
 
 origins = [
@@ -33,12 +35,6 @@ def get_db():
     finally:
         db.close()
 
-
-@app.get("/")
-async def root():
-    return {"message" : "Hello World!"}
-
-
 @app.get("/data")
 def get_data(
     db: DbSession = Depends(get_db),
@@ -49,6 +45,16 @@ def get_data(
     valueType: str = "faturamento",
     metricType: str = "graph"
 ):
+    """
+    Endpoint principal para consulta de métricas de vendas.
+    
+    Este endpoint é altamente dinâmico e permite consultar diferentes
+    métricas (como faturamento, ticket médio, etc.) agrupadas por
+    períodos de tempo e filtradas por lojas.
+    """
+
+
+
     match period:
         case "day":
             period = MetricPeriod.DAY
@@ -76,4 +82,8 @@ def get_stores(db: DbSession = Depends(get_db)):
     if stores is None:
         raise HTTPException(status_code = 404, detail="No stores found")
     
+    """
+    Retorna uma lista de todos os nomes das lojas disponíveis no banco de dados.
+    """
+
     return stores
