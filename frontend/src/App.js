@@ -4,7 +4,7 @@ import MyChart from './components/dashboard';
 import MetricCard from './components/metricCard';
 import MultipleSelect from './components/storeMultiselect'
 import LineGraph from './components/LineGraph'
-import BasicModal from './components/newAnaliticModal'
+import NewAnalyticModal from './components/newAnaliticModal'
 import { Line } from 'recharts';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useStoreNames } from './hooks/useStoreNames';
@@ -14,13 +14,28 @@ function App() {
   const [selectedStores, setSelectedStores] = useState([]);
   const { data, isLoading, error } = useStoreNames();
 
+  const [analytics, setAnalytics] = useState([]);
+
+
+  //nova métrica
+  const handleNewAnalytic = (metricConfig) => {
+    setAnalytics((prev) => [
+      ...prev,
+      { id: Date.now(), ...metricConfig },
+    ]);
+  };
+  //remoção de métrica
+  const handleRemoveAnalytic = (id) => {
+    setAnalytics((prev) => prev.filter((a) => a.id !== id));
+  };
+
   //FUNÇÕES PARA A SELECTION
   const handleMultiSelectChange = (event) => {
-    const {
-      target: { value },
-    } = event;
+      const {
+        target: { value },
+      } = event;
 
-    
+
     setSelectedStores(
       typeof value === 'string' ? value.split(',') : value,
     );
@@ -45,35 +60,47 @@ function App() {
 
 
 
-  
+
   return (
     <div className="App">
       <header className="App-header">
-        <BasicModal></BasicModal>
-        <MultipleSelect
-          selectedStores = {selectedStores}
-          options = {multiSelectOptions}
-          onChange = {handleMultiSelectChange}
-        />
-        <Stack direction="row" spacing={10}>
-          <MetricCard 
-            storeIds={selectedStores}
-            metricName="Faturamento"
-            period="week"
-          />
-          <MetricCard 
-            storeIds={selectedStores}
-            metricName="Faturamento"
-            period="day"
-          />
+      <NewAnalyticModal
+      onConfirm={handleNewAnalytic}
+      />
+      <MultipleSelect
+      selectedStores = {selectedStores}
+      options = {multiSelectOptions}
+      onChange = {handleMultiSelectChange}
+      />
+        <Stack direction="row" flexWrap="wrap" spacing={4} justifyContent="center" sx={{ mt: 4 }}>
+          {analytics.map((analytic) =>
+            analytic.type === 'singular' ? (
+              <MetricCard
+              key={analytic.id}
+              id={analytic.id}
+              storeIds={selectedStores}
+              metricName={analytic.metric}
+              period={analytic.period}
+              aggregateFunction={analytic.aggregateFunction}
+              count = {analytic.count}
+              title = {analytic.title}
+              onRemove={handleRemoveAnalytic}
+              />
+            ) : (
+            <LineGraph
+              key={analytic.id}
+              id={analytic.id}
+              selectedStores={selectedStores}
+              metric={analytic.metric}
+              period={analytic.period}
+              count={analytic.count || 30}
+              aggregateFunction={analytic.aggregateFunction}
+              title = {analytic.title}
+              onRemove={handleRemoveAnalytic}
+            />
+            )
+          )}
         </Stack>
-
-        <LineGraph
-          selectedStores = {selectedStores}
-          period = "day"
-          count = "365"
-          aggregateFunction = {"count"}
-        />
       </header>
     </div>
   );
