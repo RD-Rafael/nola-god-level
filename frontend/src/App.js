@@ -84,7 +84,7 @@ function App() {
         />
       </div>
       <header className="App-header">
-        <Stack direction="row" flexWrap="wrap" spacing={4} justifyContent="center" sx={{ mt: 4 }}>
+        <Stack direction="row" flexWrap="wrap" spacing={4} justifyContent="left" sx={{ mt: 4 }}>
           {analytics.map((analytic) =>
             analytic.type === 'singular' ? (
               <MetricCard

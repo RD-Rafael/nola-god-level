@@ -3,7 +3,17 @@ import { useMetricData } from '../hooks/useMetricData'; // Import the custom hoo
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { formatMetricValue } from '../utils/formatMetricValueUtil';
 
-
+function DebugValues({ period, count, metricName, aggregateFunction, storeIds }){
+  return (
+    <div>
+      period: {period}<h1></h1>
+      count: {count}<h1></h1>
+      valueType: {metricName}<h1></h1>
+      aggregateFunction: {aggregateFunction}<h1></h1>
+      storeList: {storeIds}<h1></h1>
+    </div>
+  );
+}
 
 
 
@@ -18,6 +28,7 @@ function MetricCard({ title, count, id, storeIds, metricName, period, aggregateF
       metricType: "singular",
     }
 
+    const debugging = false
     
     const { data, isLoading, error } = useMetricData(params);
 
@@ -39,6 +50,10 @@ function MetricCard({ title, count, id, storeIds, metricName, period, aggregateF
           minWidth: 180,
           textAlign: 'center',
           position: 'relative',
+          marginLeft: "1rem",
+          marginTop: "1rem",
+          maxHeight:"15rem",
+          minHeight:"15rem"
         }}
       >
         <button
@@ -59,12 +74,8 @@ function MetricCard({ title, count, id, storeIds, metricName, period, aggregateF
         </button>
 
         <h3>{title}</h3>
-        <div style={{ fontSize: 20, fontWeight: 'bold' }}>{isLoading ? 'Carregando...' : metricValue}</div>
-        period: {period}<h1></h1>
-        count: {count}<h1></h1>
-        valueType: {metricName}<h1></h1>
-        aggregateFunction: {aggregateFunction}<h1></h1>
-        storeList: {storeIds}<h1></h1>
+        
+        <div style={{ fontSize: "3rem", fontWeight: 'bold' }}>{isLoading ? 'Carregando...' : metricValue}</div>
       </div>
     );
 }
