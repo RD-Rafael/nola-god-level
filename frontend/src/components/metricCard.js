@@ -2,15 +2,56 @@ import React from 'react';
 import { useMetricData } from '../hooks/useMetricData'; // Import the custom hook
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-});
 
-function MetricCard({ metricName, period }) {
+//Func para formatar valores
+function formatMetricValue(metricName, value) {
+  if (value == null) return 'N/A';
+
+  switch (metricName) {
+    case 'faturamento':
+    case 'ticketMedio':
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+      }).format(value);
+
+    case 'quantidadePedidos':
+    case 'itensVendidos':
+      return new Intl.NumberFormat('pt-BR', {
+        maximumFractionDigits: 0,
+      }).format(value);
+
+    case 'tempoDeEntrega':
+      const df = new Intl.DurationFormat('en-US', {
+        style: 'long', // or 'short', 'narrow'
+        hours: 'numeric',
+        minutes: 'numeric',
+        seconds: 'numeric',
+      });
+
+      
+      const hours = Math.floor(value / 3600);
+      const minutes = Math.floor((value % 3600) / 60);
+      const seconds = Math.floor(value % 60);
+
+      return df.format({ hours, minutes, seconds });
+          default:
+      return value.toFixed ? value.toFixed(1) : value;
+  }
+}
+
+
+
+
+
+function MetricCard({ count, id, storeIds, metricName, period, aggregateFunction, onRemove }) {
     const params ={
       period: period,
-      count: 1
+      count: count,
+      valueType: metricName,
+      aggregateFunction,
+      storeList: storeIds,
+      metricType: "singular"
     }
 
     
@@ -21,17 +62,46 @@ function MetricCard({ metricName, period }) {
 
     let metricValue = 'N/A'
     if(data && data.length > 0){
-        metricValue = currencyFormatter.format(data[0].value)
+      metricValue = formatMetricValue(metricName, Number(data[0].value));
     }
 
     return (
-        <div>
-        <h3>
-            { metricName }
-        </h3>
-        { metricValue }
+      <div
+        style={{
+          background: '#1e1e1e',
+          borderRadius: 12,
+          padding: 16,
+          color: 'white',
+          minWidth: 180,
+          textAlign: 'center',
+          position: 'relative',
+        }}
+      >
+        <button
+          onClick={() => onRemove(id)}
+          style={{
+            position: 'absolute',
+            top: 6,
+            right: 10,
+            background: 'transparent',
+            border: 'none',
+            color: '#ff5555',
+            fontSize: 18,
+            cursor: 'pointer',
+          }}
+          title="Remover"
+        >
+          ✕
+        </button>
 
-        </div>
+        <h3>{metricName}</h3>
+        <div style={{ fontSize: 20, fontWeight: 'bold' }}>{isLoading ? 'Carregando...' : metricValue}</div>
+        period: {period}<h1></h1>
+        count: {count}<h1></h1>
+        valueType: {metricName}<h1></h1>
+        aggregateFunction: {aggregateFunction}<h1></h1>
+        storeList: {storeIds}<h1></h1>
+      </div>
     );
 }
 
