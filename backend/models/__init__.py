@@ -1,6 +1,6 @@
 
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.types import  TIMESTAMP, DECIMAL
+from sqlalchemy.types import  TIMESTAMP, DECIMAL, VARCHAR
 from db_setup import Base
 
 
@@ -22,12 +22,15 @@ class Sale(Base):
     customer_id = Column(Integer)
     channel_id = Column(Integer)
 
-    cod_sale1 = Column(String)
+    cod_sale1 = Column(VARCHAR(length = 100))
     created_at = Column(TIMESTAMP)
 
+    # Financial values
     total_amount_items = Column(DECIMAL)
     total_amount = Column(DECIMAL)
     value_paid = Column(DECIMAL)
     
+    # Operational metrics
     production_seconds = Column(Integer)
     delivery_seconds = Column(Integer)
+    people_quantity = Column(Integer)
