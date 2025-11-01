@@ -5,12 +5,15 @@ import Button from '@mui/material/Button';
 export default function BasicButton({callback}) {
   return (
     <Button
-    variant = "contained"
-    onClick={() => {
-      callback();
-    }}
+      variant = "contained"
+      onClick={() => {
+        callback();
+      }}
+      style = {{
+        alignItems: 'center',
+      }}
     >
-    Click me
+    Criar Métrica
     </Button>
 
   );

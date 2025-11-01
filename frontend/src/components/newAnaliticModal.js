@@ -128,7 +128,7 @@ export default function NewAnalyticModal({ onConfirm }) {
   }
 
   return (
-    <div>
+    <div style = {{alignContent : "center"}}>
       <Button variant="contained" onClick={handleOpen}>
         Nova Métrica
       </Button>

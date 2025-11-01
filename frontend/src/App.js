@@ -63,15 +63,27 @@ function App() {
 
   return (
     <div className="App">
+      <div
+          style={{
+          background: '#1e1e1e',
+          padding: 16,
+          color: 'white',
+          minWidth: 180,
+          textAlign: 'center',
+          position: 'sticky',
+          display: 'flex',
+        }}
+      >
+        <NewAnalyticModal
+          onConfirm={handleNewAnalytic}
+        />
+        <MultipleSelect
+          selectedStores = {selectedStores}
+          options = {multiSelectOptions}
+          onChange = {handleMultiSelectChange}
+        />
+      </div>
       <header className="App-header">
-      <NewAnalyticModal
-      onConfirm={handleNewAnalytic}
-      />
-      <MultipleSelect
-      selectedStores = {selectedStores}
-      options = {multiSelectOptions}
-      onChange = {handleMultiSelectChange}
-      />
         <Stack direction="row" flexWrap="wrap" spacing={4} justifyContent="center" sx={{ mt: 4 }}>
           {analytics.map((analytic) =>
             analytic.type === 'singular' ? (
