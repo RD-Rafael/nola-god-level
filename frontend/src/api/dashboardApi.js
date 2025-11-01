@@ -1,8 +1,7 @@
 import api from './axiosConfig';
 
-// Function to fetch a list of charts/data for the dashboard
 export const fetchMetricData = async (params) => {
-  const response = await api.get('/sales', { params: params});
+  const response = await api.get('/data', { params: params});
   return response.data; // The component only deals with the clean data
 };
 

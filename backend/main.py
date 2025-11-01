@@ -39,14 +39,15 @@ async def root():
     return {"message" : "Hello World!"}
 
 
-@app.get("/sales")
-def get_sales_page(
+@app.get("/data")
+def get_data(
     db: DbSession = Depends(get_db),
     period: str = "month",
     count: int = 30,
     aggregateFunction: str = "sum",
     storeList: list[int] = Query(default=[]),
-    valueType: str = "total_amount"
+    valueType: str = "faturamento",
+    metricType: str = "graph"
 ):
     match period:
         case "day":
@@ -62,28 +63,11 @@ def get_sales_page(
         case default:
             period = MetricPeriod.MONTH
 
-    match aggregateFunction:
-        case "sum":
-            aggregateFunction = "SUM"
-        case "count":
-            aggregateFunction = "COUNT"
-        case "avg":
-            aggregateFunction = "AVG"
-
-    match valueType:
-        case "total_amount":
-            valueType = valueType
-        case default:
-            valueType = "total_amount"
-        
-
-
-    first_customer = crud.metric_query(db, period, count, aggregateFunction, storeList, valueType)
-
-    if first_customer is None:
-        raise HTTPException(status_code = 404, detail="No customers found")
-
-    return first_customer
+    period_enum = MetricPeriod(period)
+    result = crud.metric_query(db, period_enum, count, aggregateFunction, storeList, valueType, metricType)
+    if not result:
+        raise HTTPException(status_code=404, detail="No data found")
+    return result
 
 @app.get("/stores")
 def get_stores(db: DbSession = Depends(get_db)):
