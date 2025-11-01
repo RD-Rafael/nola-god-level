@@ -61,11 +61,15 @@ services:
     container_name: godlevel-frontend
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
     environment:
       DB_HOST: godlevel-db
       DB_NAME: challenge_db
       DB_USER: challenge
       DB_PASS: challenge_2024
+      WATCHPACK_POLLING: true
     depends_on:
       postgres:
         condition: service_healthy
