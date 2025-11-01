@@ -22,10 +22,18 @@ def metric_query(
     valueType: str = "faturamento",  # nome da métrica
     metricType: str = "graph",       # gráfico ou singular
 ):
+    
+    params = {
+        "count": count,
+        "store_list": storeList
+    }
+
+
+
     #Filtro de lojas
     storeQueryCondition = ""
     if storeList:
-        storeQueryCondition = " AND (" + " OR ".join([f"store_id = {sid}" for sid in storeList]) + ")"
+        storeQueryCondition = " AND store_id = ANY(:store_list)"
 
 
     
@@ -89,7 +97,7 @@ def metric_query(
                 WHERE true {storeQueryCondition}
                 GROUP BY value_period
                 ORDER BY value_period DESC
-                LIMIT {count};
+                LIMIT :count;
             """
         else:
             queryStr = f"""
@@ -100,7 +108,7 @@ def metric_query(
                 WHERE true {storeQueryCondition}
                 GROUP BY value_period
                 ORDER BY value_period DESC
-                LIMIT {count};
+                LIMIT :count;
             """
 
     elif needs_subquery:
@@ -137,7 +145,7 @@ def metric_query(
             AND created_at >= NOW() - INTERVAL '{count} {period.value}s';
         """
     print("\nGenerated SQL:\n", queryStr)
-    rows = db.execute(text(queryStr)).all()
+    rows = db.execute(text(queryStr), params).all()
     return [dict(row._mapping) for row in rows]
 
 
