@@ -4,11 +4,27 @@ from fastapi import FastAPI, Depends, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session as DbSession
 from db_setup import Session as AppSession
-
-
-
 import crud
 from crud import MetricPeriod
+
+
+from enum import Enum
+class AggFunc(str, Enum):
+    SUM = "sum"
+    AVG = "avg"
+    COUNT = "count"
+
+class ValueType(str, Enum):
+    FATURAMENTO = "faturamento"
+    QTD_PEDIDOS = "quantidadePedidos"
+    ITENS_VENDIDOS = "itensVendidos"
+    TEMPO_ENTREGA = "tempoDeEntrega"
+    TICKET_MEDIO = "ticketMedio"
+
+class MetricType(str, Enum):
+    GRAPH = "graph"
+    SINGULAR = "singular"
+
 
 app = FastAPI(
     title="GodLevel Challenge 2025",
@@ -38,12 +54,12 @@ def get_db():
 @app.get("/data")
 def get_data(
     db: DbSession = Depends(get_db),
-    period: str = "month",
-    count: int = 30,
-    aggregateFunction: str = "sum",
-    storeList: list[int] = Query(default=[]),
-    valueType: str = "faturamento",
-    metricType: str = "graph"
+period: MetricPeriod = Query(MetricPeriod.MONTH, description="Período de agrupamento (day, week, month, etc.)"),
+    count: int = Query(30, description="Número de períodos/dias/semanas a considerar"),
+    aggregateFunction: AggFunc = Query(AggFunc.SUM, description="Função de agregação (sum, avg, count)"),
+    storeList: list[int] = Query(default=[], description="Lista de IDs de lojas para filtrar. Vazio = todas as lojas."),
+    valueType: ValueType = Query(ValueType.FATURAMENTO, description="A métrica principal a ser calculada."),
+    metricType: MetricType = Query(MetricType.GRAPH, description="Formato do retorno: 'graph' (série temporal) ou 'single' (valor único)")
 ):
     """
     Endpoint principal para consulta de métricas de vendas.
@@ -53,24 +69,16 @@ def get_data(
     períodos de tempo e filtradas por lojas.
     """
 
+    result = crud.metric_query(
+        db, 
+        period=period, 
+        count=count, 
+        aggregateFunction=aggregateFunction.value,
+        storeList=storeList, 
+        valueType=valueType.value, 
+        metricType=metricType.value
+    )
 
-
-    match period:
-        case "day":
-            period = MetricPeriod.DAY
-        case "week":
-            period = MetricPeriod.WEEK
-        case "month":
-            period = MetricPeriod.MONTH
-        case "quarter":
-            period = MetricPeriod.QUARTER
-        case "year":
-            period = MetricPeriod.YEAR
-        case default:
-            period = MetricPeriod.MONTH
-
-    period_enum = MetricPeriod(period)
-    result = crud.metric_query(db, period_enum, count, aggregateFunction, storeList, valueType, metricType)
     if not result:
         raise HTTPException(status_code=404, detail="No data found")
     return result
