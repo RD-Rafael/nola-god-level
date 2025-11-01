@@ -8,14 +8,14 @@ import { formatMetricValue } from '../utils/formatMetricValueUtil';
 
 
 
-function MetricCard({ count, id, storeIds, metricName, period, aggregateFunction, onRemove }) {
+function MetricCard({ title, count, id, storeIds, metricName, period, aggregateFunction, onRemove }) {
     const params ={
       period: period,
       count: count,
       valueType: metricName,
       aggregateFunction,
       storeList: storeIds,
-      metricType: "singular"
+      metricType: "singular",
     }
 
     
@@ -58,7 +58,7 @@ function MetricCard({ count, id, storeIds, metricName, period, aggregateFunction
           ✕
         </button>
 
-        <h3>{metricName}</h3>
+        <h3>{title}</h3>
         <div style={{ fontSize: 20, fontWeight: 'bold' }}>{isLoading ? 'Carregando...' : metricValue}</div>
         period: {period}<h1></h1>
         count: {count}<h1></h1>
