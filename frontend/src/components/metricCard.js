@@ -73,9 +73,9 @@ function MetricCard({ title, count, id, storeIds, metricName, period, aggregateF
           ✕
         </button>
 
-        <h3>{title}</h3>
+        <h2>{title}</h2>
         
-        <div style={{ fontSize: "3rem", fontWeight: 'bold' }}>{isLoading ? 'Carregando...' : metricValue}</div>
+        <div style={{ fontSize: "2rem", fontWeight: 'bold' }}>{isLoading ? 'Carregando...' : metricValue}</div>
       </div>
     );
 }

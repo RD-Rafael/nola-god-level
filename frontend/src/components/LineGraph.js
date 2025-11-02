@@ -33,14 +33,27 @@ export default function LineGraph({
   if (!data) return <h3>Sem dados</h3>;
 
   return (
-    <div style={{ position: "relative", margin: "20px auto" }}>
+    <div 
+    style={{ 
+      position: "relative", 
+      marginLeft: "1rem" ,
+      marginTop: "1rem",
+      background: '#1e1e1e',
+      borderRadius: 12,
+      padding: 16,
+      color: 'white',
+      minWidth: 180,
+      textAlign: 'center',
+      position: 'relative',
+      
+    }}>
       {/* Botão de remover */}
       <button
         onClick={() => onRemove(id)}
         style={{
           position: "absolute",
-          top: -10,
-          right: 5,
+          top: 5,
+          right: 10,
           background: "transparent",
           border: "none",
           color: "#ff5555",
@@ -57,7 +70,7 @@ export default function LineGraph({
         {title}
       </h3>
 
-      <LineChart width={800} height={400} data={data} style={{ maxWidth: 800, margin: "auto" }}>
+      <LineChart width={800} height={400} data={data} style={{ maxWidth: 800 }}>
         <CartesianGrid stroke="#555" strokeDasharray="5 5" />
         <XAxis
           dataKey="value_period"
@@ -65,12 +78,17 @@ export default function LineGraph({
         />
         <YAxis />
         <Tooltip
+          contentStyle={{ 
+            backgroundColor: 'rgba(30, 30, 30, 0.9)', // Fundo escuro
+            borderColor: '#555',                    // Borda sutil
+            borderRadius: 8,
+            boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+          }}
           formatter={(value) => formatMetricValue(metric, value)}
-          labelFormatter={(label) => `Período: ${new Date(label).toLocaleDateString("pt-BR")}`}
         />
         <Legend />
         <Line
-          type="monotone"
+          name={title}
           dataKey="value"
           stroke="#8884d8"
           strokeWidth={2}

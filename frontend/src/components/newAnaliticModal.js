@@ -5,18 +5,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import BasicSelect from './basicSelect';
-import BasicButton from './basicButton';
-
-
-
-
-
-
-
-
-
-
-
 
 const style = {
   position: 'absolute',
@@ -34,7 +22,6 @@ const style = {
 const metricOptions = [
   { key: 'Faturamento', value: 'faturamento' },
   { key: 'Quantidade de Pedidos', value: 'quantidadePedidos' },
-  { key: 'Itens Vendidos', value: 'itensVendidos' },
   { key: 'Tempo de Entrega', value: 'tempoDeEntrega' },
   { key: 'Ticket Médio', value: 'ticketMedio' },
   
@@ -43,7 +30,6 @@ const metricOptions = [
 const optionMetric = [
     {key: 'faturamento', value: 'Faturamento'},
     {key: 'quantidadePedidos', value: 'Quantidade de Pedidos'},
-    {key: 'itensVendidos', value: 'Itens Vendidos'},
     {key: 'tempoDeEntrega', value: 'Tempo de Entrega'},
     {key: 'ticketMedio', value: 'Ticket Médio'},
 ];
@@ -205,7 +191,7 @@ export default function NewAnalyticModal({ onConfirm }) {
             </>
 
           <Box sx={{ mt: 3 }}>
-            <BasicButton callback={confirmButtonCallback} />
+            <Button variant = "contained" onClick={confirmButtonCallback}>Criar Métrica</Button>
           </Box>
         </Box>
       </Modal>

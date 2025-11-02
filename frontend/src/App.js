@@ -29,7 +29,7 @@ function App() {
     setAnalytics((prev) => prev.filter((a) => a.id !== id));
   };
 
-  //FUNÇÕES PARA A SELECTION
+  //Selection de restaurantes////
   const handleMultiSelectChange = (event) => {
       const {
         target: { value },
@@ -63,6 +63,8 @@ function App() {
 
   return (
     <div className="App">
+
+      
       <div
           style={{
           background: '#1e1e1e',
@@ -83,6 +85,9 @@ function App() {
           onChange = {handleMultiSelectChange}
         />
       </div>
+
+
+
       <header className="App-header">
         <Stack direction="row" flexWrap="wrap" spacing={4} justifyContent="left" sx={{ mt: 4 }}>
           {analytics.map((analytic) =>
@@ -99,17 +104,17 @@ function App() {
               onRemove={handleRemoveAnalytic}
               />
             ) : (
-            <LineGraph
-              key={analytic.id}
-              id={analytic.id}
-              selectedStores={selectedStores}
-              metric={analytic.metric}
-              period={analytic.period}
-              count={analytic.count || 30}
-              aggregateFunction={analytic.aggregateFunction}
-              title = {analytic.title}
-              onRemove={handleRemoveAnalytic}
-            />
+              <LineGraph
+                key={analytic.id}
+                id={analytic.id}
+                selectedStores={selectedStores}
+                metric={analytic.metric}
+                period={analytic.period}
+                count={analytic.count || 30}
+                aggregateFunction={analytic.aggregateFunction}
+                title = {analytic.title}
+                onRemove={handleRemoveAnalytic}
+              />
             )
           )}
         </Stack>
