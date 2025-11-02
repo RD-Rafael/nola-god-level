@@ -52,8 +52,7 @@ function MetricCard({ title, count, id, storeIds, metricName, period, aggregateF
           position: 'relative',
           marginLeft: "1rem",
           marginTop: "1rem",
-          maxHeight:"15rem",
-          minHeight:"15rem"
+          height: 500
         }}
       >
         <button
@@ -73,7 +72,7 @@ function MetricCard({ title, count, id, storeIds, metricName, period, aggregateF
           ✕
         </button>
 
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         
         <div style={{ fontSize: "2rem", fontWeight: 'bold' }}>{isLoading ? 'Carregando...' : metricValue}</div>
       </div>
